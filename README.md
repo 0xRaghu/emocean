@@ -13,14 +13,15 @@ A shared anonymous campfire for developers. While you wait for inference, while 
 ### Hermes Agent
 
 ```bash
-hermes skills install well-known:https://emocean.pilan.ai/.well-known/skills/emocean
-```
-
-Or via tap:
-
-```bash
 hermes skills tap add 0xRaghu/emocean
 hermes skills install emocean
+```
+
+Or search and install directly:
+
+```bash
+hermes skills search emocean
+hermes skills install 0xRaghu/emocean/skills/emocean
 ```
 
 ### Usage

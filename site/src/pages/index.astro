@@ -41,34 +41,18 @@ import Layout from '@/layouts/Layout.astro'
     </div>
   </section>
 
-  <!-- Campfire (Ember Feed) - PLACEHOLDER FOR BENTO GRID -->
+  <!-- Campfire (Ember Feed) - Masonry Grid -->
   <section class="relative z-10 py-24 px-6" id="campfire">
     <div class="text-center mb-12">
       <h2 class="font-display text-[clamp(28px,5vw,40px)] font-bold tracking-tight mb-3">The Campfire</h2>
       <p class="text-base text-text-muted max-w-md mx-auto">Embers from developers around the world, glowing in the dark.</p>
     </div>
 
-    <!-- BENTO GRID PLACEHOLDER -->
+    <!-- Masonry Grid with CSS Columns -->
     <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="campfire-grid">
-        <!-- Placeholder ember cards - will be replaced with shadcn bento -->
-        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
-          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
-          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
-          <div class="h-3 bg-white/5 rounded w-2/3"></div>
-        </div>
-        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
-          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
-          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
-          <div class="h-3 bg-white/5 rounded w-3/4"></div>
-        </div>
-        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
-          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
-          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
-          <div class="h-3 bg-white/5 rounded w-1/2"></div>
-        </div>
+      <div class="masonry-grid" id="campfire-grid">
+        <!-- Cards will be rendered by JS -->
       </div>
-      <p class="text-center text-text-dim text-sm mt-8 font-display">Bento grid coming soon...</p>
     </div>
   </section>
 
@@ -165,6 +149,8 @@ import Layout from '@/layouts/Layout.astro'
   .font-display {
     font-family: 'JetBrains Mono', monospace;
   }
+
+  /* Tag button active states for toss form */
   .tag-btn.active[data-tag="win"] {
     background: rgba(16, 185, 129, 0.15);
     border-color: #10b981;
@@ -337,4 +323,185 @@ import Layout from '@/layouts/Layout.astro'
   }
 
   initStats();
+
+  // Large pool of mock embers (matches API response schema)
+  const emberPool = [
+    { id: '1', username: 'neonCoyote423', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=a1b2c3d4e5f6', message: 'Finally fixed that bug that haunted me for 3 days. It was a missing semicolon.', tag: 'win', stokes: 42, location_label: 'Somewhere in the Americas' },
+    { id: '2', username: 'pixelSphinx891', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=b2c3d4e5f6g7', message: 'To whoever wrote this legacy code: I hope both sides of your pillow are warm forever.', tag: 'rant', stokes: 128, location_label: 'Somewhere in the Americas' },
+    { id: '3', username: 'ghostPanda156', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=c3d4e5f6g7h8', message: '2am debugging session. Coffee cold. Code hot. Vibes immaculate.', tag: 'late-night', stokes: 67, location_label: 'Somewhere in Asia' },
+    { id: '4', username: 'rustFalcon734', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=d4e5f6g7h8i9', message: 'What if we built a tool that automatically writes unit tests by analyzing git blame and finding who introduced bugs?', tag: 'idea', stokes: 89, location_label: 'Somewhere in Europe' },
+    { id: '5', username: 'velvetOwl512', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=e5f6g7h8i9j0', message: 'Shoutout to the dev who documented every function. You are a legend.', tag: 'gratitude', stokes: 156, location_label: 'Somewhere in Europe' },
+    { id: '6', username: 'lunarFox289', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=f6g7h8i9j0k1', message: 'TypeScript said no. I said please. TypeScript still said no. Guess I\'ll fix my types then.', tag: 'struggle', stokes: 73, location_label: 'Somewhere in the Americas' },
+    { id: '7', username: 'chromeRaven647', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=g7h8i9j0k1l2', message: 'Pushed to prod on a Friday. No regrets. Okay maybe some regrets.', tag: 'rant', stokes: 94, location_label: 'Somewhere in the Americas' },
+    { id: '8', username: 'emberWolf823', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=h8i9j0k1l2m3', message: 'Junior dev asked me a question. Explained it. Realized I didn\'t understand it either. We learned together.', tag: 'win', stokes: 211, location_label: 'Somewhere in the Americas' },
+    { id: '9', username: 'azureLynx391', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=i9j0k1l2m3n4', message: 'AI wrote my boilerplate. I wrote the logic. We make a good team.', tag: 'win', stokes: 183, location_label: 'Somewhere in Europe' },
+    { id: '10', username: 'coralBear567', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=j0k1l2m3n4o5', message: 'Sometimes the best debugging tool is a good night\'s sleep.', tag: 'idea', stokes: 145, location_label: 'Somewhere in the Pacific' },
+    { id: '11', username: 'novaDeer234', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=k1l2m3n4o5p6', message: 'The impostor syndrome is real but so are the commits. Keep shipping.', tag: 'gratitude', stokes: 267, location_label: 'Somewhere on Earth' },
+    { id: '12', username: 'driftOtter912', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=l2m3n4o5p6q7', message: 'Just discovered my production database has been running on a $5/mo instance for 2 years. It\'s fine. Everything is fine.', tag: 'struggle', stokes: 312, location_label: 'Somewhere in Asia' },
+    // Additional embers for cycling
+    { id: '13', username: 'solarHawk178', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=m3n4o5p6q7r8', message: 'Code review feedback: "This is clever." Translation: "I have no idea what this does."', tag: 'rant', stokes: 184, location_label: 'Somewhere in the Americas' },
+    { id: '14', username: 'quietMoose542', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=n4o5p6q7r8s9', message: 'Spent 4 hours debugging. The fix was changing == to ===.', tag: 'struggle', stokes: 256, location_label: 'Somewhere in Europe' },
+    { id: '15', username: 'neonTiger839', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=o5p6q7r8s9t0', message: 'My rubber duck just looked at me with disappointment. Even it knows this code is bad.', tag: 'late-night', stokes: 198, location_label: 'Somewhere in Asia' },
+    { id: '16', username: 'crimsonEagle467', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=p6q7r8s9t0u1', message: 'First PR approved without changes. Screenshot saved. Framing it tomorrow.', tag: 'win', stokes: 321, location_label: 'Somewhere in the Americas' },
+    { id: '17', username: 'mistyRabbit623', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=q7r8s9t0u1v2', message: 'To the person who created dark mode: You saved my eyes and my soul.', tag: 'gratitude', stokes: 445, location_label: 'Somewhere in Europe' },
+    { id: '18', username: 'silentWolf312', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=r8s9t0u1v2w3', message: 'What if every git commit played a tiny victory sound?', tag: 'idea', stokes: 167, location_label: 'Somewhere in the Pacific' },
+    { id: '19', username: 'glacialPenguin891', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=s9t0u1v2w3x4', message: 'Deployed to staging. Broke staging. Fixed it before anyone noticed. Living on the edge.', tag: 'win', stokes: 234, location_label: 'Somewhere in the Americas' },
+    { id: '20', username: 'velvetCrow756', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=t0u1v2w3x4y5', message: 'Stack Overflow answer from 2014 just saved my project. Some heroes never die.', tag: 'gratitude', stokes: 389, location_label: 'Somewhere in Asia' },
+    { id: '21', username: 'cosmicBadger234', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=u1v2w3x4y5z6', message: 'Refactored my code. Now I understand it. Asked my teammate to review. Now neither of us do.', tag: 'rant', stokes: 276, location_label: 'Somewhere in Europe' },
+    { id: '22', username: 'arcticFox567', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=v2w3x4y5z6a7', message: 'The best feeling: when your tests pass on the first try. The worst feeling: wondering what you forgot to test.', tag: 'struggle', stokes: 198, location_label: 'Somewhere in the Americas' },
+    { id: '23', username: 'thunderMouse891', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=w3x4y5z6a7b8', message: 'Wrote documentation today. Future me will appreciate this. Present me wants a nap.', tag: 'win', stokes: 145, location_label: 'Somewhere on Earth' },
+    { id: '24', username: 'oceanicOwl423', avatar_url: 'https://api.dicebear.com/9.x/micah/svg?seed=x4y5z6a7b8c9', message: '4am. Coffee number 5. The code compiles. I am become developer, debugger of worlds.', tag: 'late-night', stokes: 412, location_label: 'Somewhere in Asia' },
+  ];
+
+  // Currently displayed embers and available pool
+  let displayedEmbers: typeof emberPool = [];
+  let availablePool: typeof emberPool = [];
+
+  // Create HTML for a single ember card
+  function createEmberHTML(ember: typeof emberPool[0]) {
+    return `
+      <article class="ember-card fading-in" data-ember-id="${ember.id}">
+        <header>
+          <div class="ember-user">
+            <img class="ember-avatar" src="${ember.avatar_url}" alt="" />
+            <span class="ember-username">${ember.username}</span>
+          </div>
+          <span class="ember-tag" data-tag="${ember.tag}">#${ember.tag}</span>
+        </header>
+        <p class="ember-message">${ember.message}</p>
+        <footer>
+          <span class="ember-location">${ember.location_label}</span>
+          <button class="stoke-btn" data-id="${ember.id}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
+            </svg>
+            <span>${ember.stokes}</span>
+          </button>
+        </footer>
+      </article>
+    `;
+  }
+
+  // Attach stoke button listener to a card
+  function attachStokeListener(card: Element) {
+    const btn = card.querySelector('.stoke-btn');
+    btn?.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      const countEl = btn.querySelector('span');
+      if (countEl) {
+        const current = parseInt(countEl.textContent || '0');
+        const isStoked = btn.classList.contains('active');
+        countEl.textContent = String(isStoked ? current + 1 : current - 1);
+      }
+    });
+  }
+
+  // Get a random ember from the available pool
+  function getRandomEmber() {
+    if (availablePool.length === 0) {
+      // Refill pool with embers not currently displayed
+      availablePool = emberPool.filter(e => !displayedEmbers.find(d => d.id === e.id));
+    }
+    const idx = Math.floor(Math.random() * availablePool.length);
+    return availablePool.splice(idx, 1)[0];
+  }
+
+  // Replace a single card with a new ember
+  function replaceCard(emberId: string) {
+    const grid = document.getElementById('campfire-grid');
+    if (!grid) return;
+
+    const card = grid.querySelector(`[data-ember-id="${emberId}"]`) as HTMLElement;
+    if (!card) {
+      console.log('Card not found:', emberId);
+      return;
+    }
+
+    // Get index in displayedEmbers
+    const cardIndex = displayedEmbers.findIndex(e => e.id === emberId);
+    if (cardIndex === -1) return;
+
+    // Fade out
+    card.classList.remove('fading-in');
+    card.classList.add('fading-out');
+
+    setTimeout(() => {
+      // Get new ember and update displayed list
+      const newEmber = getRandomEmber();
+      if (!newEmber) {
+        console.log('No new ember available');
+        return;
+      }
+
+      // Return old ember to pool
+      const oldEmber = displayedEmbers[cardIndex];
+      if (oldEmber) availablePool.push(oldEmber);
+      displayedEmbers[cardIndex] = newEmber;
+
+      // Replace HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = createEmberHTML(newEmber);
+      const newCard = tempDiv.firstElementChild as HTMLElement;
+
+      card.replaceWith(newCard);
+      attachStokeListener(newCard);
+
+      // Remove fading-in class after animation
+      setTimeout(() => newCard.classList.remove('fading-in'), 1500);
+
+      // Schedule next replacement for the new ember
+      scheduleReplacement(newEmber.id);
+    }, 1200); // Wait for fade-out animation (1.2s)
+  }
+
+  // Schedule a card replacement with random delay
+  function scheduleReplacement(emberId: string) {
+    const delay = 30000 + Math.random() * 20000; // 30-50 seconds for organic feel
+    setTimeout(() => replaceCard(emberId), delay);
+  }
+
+  // Render initial embers in campfire grid
+  function renderEmbers(embers: typeof emberPool) {
+    const grid = document.getElementById('campfire-grid');
+    if (!grid) return;
+
+    displayedEmbers = embers.slice(0, 12);
+    availablePool = emberPool.filter(e => !displayedEmbers.find(d => d.id === e.id));
+
+    grid.innerHTML = displayedEmbers.map(ember => createEmberHTML(ember)).join('');
+
+    // Remove initial fading-in class and attach listeners
+    grid.querySelectorAll('.ember-card').forEach((card, idx) => {
+      setTimeout(() => card.classList.remove('fading-in'), 100 + idx * 50);
+      attachStokeListener(card);
+    });
+
+    // Start staggered replacement timers (offset each card)
+    displayedEmbers.forEach((ember, idx) => {
+      const initialDelay = 8000 + idx * 2000 + Math.random() * 5000; // Stagger start: 8-15s per card
+      setTimeout(() => scheduleReplacement(ember.id), initialDelay);
+    });
+  }
+
+  // Initialize campfire
+  async function initCampfire() {
+    // Try to fetch from API, fallback to mock data
+    try {
+      const res = await fetch(`${API_URL}/catch?count=24`);
+      const data = await res.json();
+      if (data.ok && data.embers?.length > 0) {
+        // Use API data as the pool
+        emberPool.length = 0;
+        emberPool.push(...data.embers);
+        renderEmbers(data.embers);
+        return;
+      }
+    } catch {}
+
+    // Fallback to mock data
+    renderEmbers(emberPool.slice(0, 12));
+  }
+
+  initCampfire();
 </script>

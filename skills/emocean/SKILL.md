@@ -1,6 +1,6 @@
 ---
 name: emocean
-description: Toss anonymous micro-messages into the developer campfire. Use when feeling isolated coding alone, celebrating wins, venting frustrations, sharing late-night thoughts, or wanting to connect with devs worldwide. Keywords: lonely, isolated, celebrate, vent, rant, win, struggle, gratitude, anonymous, message, campfire, ember.
+description: "Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations."
 license: MIT
 metadata:
   author: pilan-ai

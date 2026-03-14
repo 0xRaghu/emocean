@@ -162,6 +162,34 @@ function corsResponse(body, status = 200) {
   });
 }
 
+// ─── Content Moderation ───────────────────────────────────────────────
+
+// Block URLs to prevent spam/ads
+const URL_PATTERN = /(https?:\/\/|www\.|\.com\b|\.io\b|\.xyz\b|\.ai\b|\.dev\b|\.net\b|\.org\b|bit\.ly|t\.co)/i;
+
+// Basic profanity blocklist (extend as needed)
+const BLOCKLIST = [
+  'fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'pussy',
+  'nigger', 'faggot', 'retard', 'kys', 'kill yourself'
+];
+
+function containsBlockedContent(message) {
+  // Check for URLs
+  if (URL_PATTERN.test(message)) {
+    return { blocked: true, reason: 'URLs are not allowed. Keep it personal.' };
+  }
+
+  // Check for profanity
+  const lowerMsg = message.toLowerCase();
+  for (const word of BLOCKLIST) {
+    if (lowerMsg.includes(word)) {
+      return { blocked: true, reason: 'Keep it kind. This is a campfire, not a battlefield.' };
+    }
+  }
+
+  return { blocked: false };
+}
+
 // ─── Route Handlers ───────────────────────────────────────────────────
 
 /**
@@ -195,7 +223,25 @@ async function handleToss(request, env) {
     return corsResponse({ error: `Invalid tag. Use one of: ${validTags.filter(Boolean).join(', ')}` }, 400);
   }
 
+  // Content moderation
+  const moderation = containsBlockedContent(message);
+  if (moderation.blocked) {
+    return corsResponse({ error: moderation.reason }, 400);
+  }
+
   const senderHash = await sha256(sender_id);
+
+  // Rate limiting: 1 ember per sender per 60 seconds
+  const recentEmber = await env.DB.prepare(
+    `SELECT created_at FROM embers
+     WHERE sender_hash = ?
+     AND created_at > datetime('now', '-1 minute')
+     LIMIT 1`
+  ).bind(senderHash).first();
+
+  if (recentEmber) {
+    return corsResponse({ error: 'Slow down. Wait a minute before tossing another ember.' }, 429);
+  }
   const username = generateUsername(senderHash);
   const avatarSeed = generateAvatarSeed(senderHash);
   const locationLabel = resolveLocation(timezone || null);

@@ -84,12 +84,12 @@ const {
     // Create stars
     const starsContainer = document.getElementById('stars');
     if (starsContainer) {
-      const count = window.innerWidth < 640 ? 30 : 60;
+      const count = window.innerWidth < 640 ? 40 : 80;
       for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.className = 'absolute w-0.5 h-0.5 bg-white rounded-full opacity-40';
         star.style.left = `${Math.random() * 100}%`;
-        star.style.top = `${Math.random() * 60}%`;
+        star.style.top = `${Math.random() * 100}%`;
         star.style.animation = `twinkle 3s ease-in-out infinite ${Math.random() * 3}s`;
         starsContainer.appendChild(star);
       }
@@ -98,13 +98,13 @@ const {
     // Create ember particles
     const embersContainer = document.getElementById('embers-float');
     if (embersContainer) {
-      const count = window.innerWidth < 640 ? 10 : 20;
+      const count = window.innerWidth < 640 ? 15 : 30;
       for (let i = 0; i < count; i++) {
         const ember = document.createElement('div');
         ember.className = 'absolute w-1 h-1 bg-ember rounded-full opacity-0 blur-[1px]';
-        ember.style.left = `${30 + Math.random() * 40}%`;
-        ember.style.bottom = `${Math.random() * 30}%`;
-        ember.style.animation = `ember-rise ${4 + Math.random() * 4}s ease-out infinite ${Math.random() * 6}s`;
+        ember.style.left = `${10 + Math.random() * 80}%`;
+        ember.style.bottom = '0%';
+        ember.style.animation = `ember-rise ${5 + Math.random() * 5}s ease-out infinite ${Math.random() * 8}s`;
         embersContainer.appendChild(ember);
       }
     }

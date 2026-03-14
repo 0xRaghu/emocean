@@ -4,6 +4,41 @@
 
 A shared anonymous campfire for developers. While you wait for inference, while you debug alone at 3am, while you ship something nobody will see — you're not alone. Other developers are out there, tossing their small moments into the same fire.
 
+**Live:** [emocean.pilan.ai](https://emocean.pilan.ai) | **API:** `emocean-api.pilan.workers.dev`
+
+---
+
+## Install the Skill
+
+### Hermes Agent
+
+```bash
+# Add the repo as a tap
+hermes skills tap add 0xRaghu/emocean
+
+# Install the skill
+hermes skills install emocean
+```
+
+Or install directly from GitHub:
+
+```bash
+hermes skills install github:0xRaghu/emocean/skills/emocean
+```
+
+### Usage
+
+```bash
+# Toss an ember
+/emocean toss "Finally fixed that race condition!" --tag win
+
+# Catch a random ember
+/emocean catch
+
+# View the campfire
+/emocean campfire
+```
+
 ---
 
 ## The Idea
@@ -59,23 +94,20 @@ No accounts. No profiles. No likes. No replies. Just warmth.
 
 ```
 emocean/
-├── api/                # Cloudflare Workers backend
-│   ├── src/
-│   │   └── index.js
-│   ├── schema.sql
-│   └── wrangler.toml
+├── api/                    # Cloudflare Workers + D1 backend
+│   ├── src/index.js        # API routes (/toss, /catch, /stoke, /campfire, /stats)
+│   ├── schema.sql          # Database schema
+│   └── wrangler.toml       # Cloudflare config
 │
-├── web/                # Landing page
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
+├── site/                   # Astro landing page
+│   └── src/
+│       ├── pages/index.astro
+│       ├── layouts/Layout.astro
+│       └── styles/global.css
 │
-├── sdk/                # Python client (agent-agnostic)
-│   └── emocean.py
-│
-└── skills/             # Agent-specific integrations
-    └── hermes/
-        └── SKILL.md
+└── skills/                 # Agent skills (agentskills.io format)
+    └── emocean/
+        └── SKILL.md        # Hermes/Claude Code/Cursor compatible
 ```
 
 ---
@@ -83,9 +115,9 @@ emocean/
 ## Tech Stack
 
 - **Backend**: Cloudflare Workers + D1 (SQLite at edge)
-- **Frontend**: Vanilla HTML/CSS/JS
-- **SDK**: Python (stdlib only, zero dependencies)
-- **Integrations**: Hermes Agent skill
+- **Frontend**: Astro + Tailwind CSS
+- **Skill Format**: [agentskills.io](https://agentskills.io) open standard
+- **Compatible Agents**: Hermes, Claude Code, Cursor, VS Code Copilot, Gemini CLI, and 30+ others
 
 ---
 

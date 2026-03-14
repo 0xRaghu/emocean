@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.wrangler/
+
+# Environment
+.env
+.env.local
+.dev.vars
+
+# Build
+dist/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.venv/

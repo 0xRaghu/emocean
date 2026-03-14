@@ -52,8 +52,10 @@ Receive a random anonymous message from another developer.
 /emocean catch
 ```
 
+This returns a single random ember from the campfire - a message from a dev somewhere in the world.
+
 ### Stoke an Ember
-Show appreciation for an ember by "stoking" it.
+Show appreciation for an ember by "stoking" it (like a campfire).
 
 ```
 /emocean stoke <ember_id>
@@ -64,6 +66,15 @@ See multiple embers at once.
 
 ```
 /emocean campfire
+```
+
+Returns up to 12 recent embers from developers worldwide.
+
+### Check Stats
+See campfire activity.
+
+```
+/emocean stats
 ```
 
 ## API Integration
@@ -91,11 +102,42 @@ The skill uses the Emocean API at `https://emocean-api.pilan.workers.dev`
 }
 ```
 
+### Response Format
+
+```json
+{
+  "ok": true,
+  "ember": {
+    "id": "abc123",
+    "username": "CosmicPenguin423",
+    "avatar_url": "https://api.dicebear.com/9.x/micah/svg?seed=...",
+    "location": "Somewhere on the US East Coast"
+  }
+}
+```
+
 ## Implementation Notes
 
-1. **Anonymous Identity**: Generate a persistent `sender_id` per user (UUID stored locally)
-2. **Rate Limiting**: Users can only toss 1 ember per 60 seconds
-3. **Content Moderation**: URLs and profanity are blocked
+1. **Anonymous Identity**: Generate a persistent `sender_id` per user (e.g., UUID stored locally). This creates consistent anonymous usernames without accounts.
+
+2. **Rate Limiting**: Users can only toss 1 ember per 60 seconds.
+
+3. **Content Moderation**: URLs and profanity are blocked. Keep messages personal and kind.
+
+4. **Timezone**: Pass the user's timezone for location-based display (e.g., "Late Night in Tokyo").
+
+## Example Workflow
+
+When a user says something like "I'm so frustrated with this bug" or "finally got it working!":
+
+1. Recognize the emotional context
+2. Suggest tossing an ember: "Want to share that with the campfire? Other devs might relate."
+3. If yes, call the toss endpoint with appropriate tag
+4. Optionally catch an ember to show them they're not alone
+
+## Philosophy
+
+Emocean exists because coding can be lonely. AI assistants are powerful, but sometimes you just want to know another human is out there, grinding through the same struggles and celebrating the same wins. Every ember is a tiny reminder: you're not alone in this.
 
 ---
 

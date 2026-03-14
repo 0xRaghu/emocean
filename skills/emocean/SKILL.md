@@ -109,9 +109,9 @@ The skill uses the Emocean API at `https://emocean-api.pilan.workers.dev`
   "ok": true,
   "ember": {
     "id": "abc123",
-    "username": "cosmic_penguin",
-    "avatar_url": "https://api.dicebear.com/7.x/thumbs/svg?seed=...",
-    "location": "East Coast, USA"
+    "username": "CosmicPenguin423",
+    "avatar_url": "https://api.dicebear.com/9.x/micah/svg?seed=...",
+    "location": "Somewhere on the US East Coast"
   }
 }
 ```

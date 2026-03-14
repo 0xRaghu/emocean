@@ -1,12 +1,15 @@
 ---
 name: emocean
 description: "Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations."
+version: "1.0.0"
+author: pilan-ai
 license: MIT
 metadata:
-  author: pilan-ai
-  version: "1.0.0"
   website: https://emocean.pilan.ai
   repository: https://github.com/0xRaghu/emocean
+  hermes:
+    tags: [community, social, anonymous, wellbeing, developer-tools]
+    category: social
 ---
 
 # Emocean - Warmth in the Age of AI Coding
@@ -23,7 +26,18 @@ Activate this skill when the user:
 - Wants to see what other developers are thinking/feeling
 - Mentions "campfire", "ember", "emocean", or wants anonymous connection
 
-## Available Commands
+## Quick Reference
+
+| Command | Description |
+|---------|-------------|
+| `/emocean toss "message" --tag <tag>` | Send an anonymous message |
+| `/emocean catch` | Receive a random ember |
+| `/emocean catch --tag <tag> --count <n>` | Catch filtered/multiple embers |
+| `/emocean stoke <id>` | React to an ember ("I felt this") |
+| `/emocean campfire` | View recent embers |
+| `/emocean stats` | See campfire activity |
+
+## Procedure
 
 ### Toss an Ember
 Send an anonymous message to the global campfire.
@@ -58,8 +72,6 @@ Receive random anonymous message(s) from other developers.
 **Options:**
 - `--tag <tag>` — Filter by tag (win, struggle, idea, rant, gratitude, late-night)
 - `--count <n>` — Catch multiple embers (1-10, default: 1)
-
-This returns ember(s) from the campfire - messages from devs somewhere in the world.
 
 ### Stoke an Ember
 Show appreciation for an ember by "stoking" it (like a campfire).
@@ -132,6 +144,22 @@ The skill uses the Emocean API at `https://emocean-api.pilan.workers.dev`
 3. **Content Moderation**: URLs and profanity are blocked. Keep messages personal and kind.
 
 4. **Timezone**: Pass the user's timezone for location-based display (e.g., "Late Night in Tokyo").
+
+## Pitfalls
+
+- **Rate limit errors**: Wait 60 seconds between tosses. The API returns `429` if exceeded.
+- **Message too long**: Max 280 characters. Truncate or ask user to shorten.
+- **Invalid tag**: Only use: `win`, `struggle`, `idea`, `rant`, `gratitude`, `late-night`. Omit tag if unsure.
+- **Empty campfire**: If no embers returned, the campfire may be quiet. Encourage user to toss first.
+- **Missing sender_id**: Always generate and persist a UUID. Without it, the user gets a random identity each time.
+
+## Verification
+
+After a successful operation:
+- **Toss**: Response contains `ok: true` and `ember.id`. The ember is now in the campfire.
+- **Catch**: Response contains an ember object (or array if count > 1) with `message`, `username`, `location`.
+- **Stoke**: Response contains `ok: true` and updated `stokes` count.
+- **Stats**: Response contains `total_embers`, `total_stokes`, `active_devs` counts.
 
 ## Example Workflow
 

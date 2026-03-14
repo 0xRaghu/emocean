@@ -13,17 +13,14 @@ A shared anonymous campfire for developers. While you wait for inference, while 
 ### Hermes Agent
 
 ```bash
-# Add the repo as a tap
-hermes skills tap add 0xRaghu/emocean
-
-# Install the skill
-hermes skills install emocean
+hermes skills install well-known:https://emocean.pilan.ai/.well-known/skills/emocean
 ```
 
-Or install directly from GitHub:
+Or via tap:
 
 ```bash
-hermes skills install github:0xRaghu/emocean/skills/emocean
+hermes skills tap add 0xRaghu/emocean
+hermes skills install emocean
 ```
 
 ### Usage

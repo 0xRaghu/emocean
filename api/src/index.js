@@ -296,62 +296,50 @@ async function handleCatch(request, env) {
     return corsResponse({ error: `Invalid tag. Use one of: ${validTags.join(', ')}` }, 400);
   }
 
-  // Build WHERE clauses
+  // Build WHERE clauses with parameterized queries
   const timeFilter = `(created_at > datetime('now', '-24 hours') OR (stokes >= 5 AND created_at > datetime('now', '-48 hours')))`;
   const conditions = [timeFilter];
   const fallbackConditions = [];
+  const params = [];
+  const fallbackParams = [];
 
   if (excludeHash) {
     conditions.push(`sender_hash != ?`);
     fallbackConditions.push(`sender_hash != ?`);
+    params.push(excludeHash);
+    fallbackParams.push(excludeHash);
   }
   if (tagFilter) {
-    conditions.push(`tag = '${tagFilter}'`);
-    fallbackConditions.push(`tag = '${tagFilter}'`);
+    conditions.push(`tag = ?`);
+    fallbackConditions.push(`tag = ?`);
+    params.push(tagFilter);
+    fallbackParams.push(tagFilter);
   }
 
   const whereClause = conditions.join(' AND ');
   const fallbackWhere = fallbackConditions.length > 0 ? fallbackConditions.join(' AND ') : '1=1';
 
-  let results;
-  if (excludeHash) {
+  // Add count as last param
+  params.push(count);
+  fallbackParams.push(count);
+
+  let results = await env.DB.prepare(
+    `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
+     FROM embers
+     WHERE ${whereClause}
+     ORDER BY RANDOM()
+     LIMIT ?`
+  ).bind(...params).all();
+
+  // Fallback to any matching ember if campfire is quiet
+  if (!results.results?.length) {
     results = await env.DB.prepare(
       `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
        FROM embers
-       WHERE ${whereClause}
+       ${fallbackConditions.length > 0 ? `WHERE ${fallbackWhere}` : ''}
        ORDER BY RANDOM()
        LIMIT ?`
-    ).bind(excludeHash, count).all();
-
-    // Fallback to any matching ember if campfire is quiet
-    if (!results.results?.length) {
-      results = await env.DB.prepare(
-        `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
-         FROM embers
-         WHERE ${fallbackWhere}
-         ORDER BY RANDOM()
-         LIMIT ?`
-      ).bind(excludeHash, count).all();
-    }
-  } else {
-    results = await env.DB.prepare(
-      `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
-       FROM embers
-       WHERE ${whereClause}
-       ORDER BY RANDOM()
-       LIMIT ?`
-    ).bind(count).all();
-
-    // Fallback to any matching ember if campfire is quiet
-    if (!results.results?.length) {
-      results = await env.DB.prepare(
-        `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
-         FROM embers
-         ${tagFilter ? `WHERE tag = '${tagFilter}'` : ''}
-         ORDER BY RANDOM()
-         LIMIT ?`
-      ).bind(count).all();
-    }
+    ).bind(...fallbackParams).all();
   }
 
   const embers = (results.results || []).map(e => ({

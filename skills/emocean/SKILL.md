@@ -46,13 +46,20 @@ Send an anonymous message to the global campfire.
 ```
 
 ### Catch an Ember
-Receive a random anonymous message from another developer.
+Receive random anonymous message(s) from other developers.
 
 ```
 /emocean catch
+/emocean catch --tag late-night
+/emocean catch --count 3
+/emocean catch --tag win --count 5
 ```
 
-This returns a single random ember from the campfire - a message from a dev somewhere in the world.
+**Options:**
+- `--tag <tag>` — Filter by tag (win, struggle, idea, rant, gratitude, late-night)
+- `--count <n>` — Catch multiple embers (1-10, default: 1)
+
+This returns ember(s) from the campfire - messages from devs somewhere in the world.
 
 ### Stoke an Ember
 Show appreciation for an ember by "stoking" it (like a campfire).
@@ -86,9 +93,9 @@ The skill uses the Emocean API at `https://emocean-api.pilan.workers.dev`
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/toss` | POST | Send a new ember |
-| `/catch` | GET | Get a random ember |
+| `/catch` | GET | Get random ember(s) — supports `?tag=`, `?count=`, `?exclude=` |
 | `/stoke` | POST | Stoke (like) an ember |
-| `/campfire` | GET | Get multiple embers |
+| `/campfire` | GET | Get multiple embers (for display) |
 | `/stats` | GET | Get campfire statistics |
 
 ### Toss Request Format

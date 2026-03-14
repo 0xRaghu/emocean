@@ -279,77 +279,115 @@ async function handleToss(request, env) {
 }
 
 /**
- * GET /catch — Catch a random ember from the campfire
+ * GET /catch — Catch random ember(s) from the campfire
+ * Params: ?tag=win (filter by tag), ?count=3 (multiple embers), ?exclude=sender_id
  * Prioritizes fresh embers (24h) and hot embers (48h with 5+ stokes)
  */
 async function handleCatch(request, env) {
   const url = new URL(request.url);
   const excludeSender = url.searchParams.get('exclude');
   const excludeHash = excludeSender ? await sha256(excludeSender) : null;
+  const tagFilter = url.searchParams.get('tag');
+  const count = Math.min(Math.max(parseInt(url.searchParams.get('count') || '1'), 1), 10);
 
-  // Time filter: 24h fresh + 48h hot (5+ stokes)
+  // Validate tag if provided
+  const validTags = ['win', 'struggle', 'idea', 'rant', 'gratitude', 'late-night'];
+  if (tagFilter && !validTags.includes(tagFilter)) {
+    return corsResponse({ error: `Invalid tag. Use one of: ${validTags.join(', ')}` }, 400);
+  }
+
+  // Build WHERE clauses
   const timeFilter = `(created_at > datetime('now', '-24 hours') OR (stokes >= 5 AND created_at > datetime('now', '-48 hours')))`;
+  const conditions = [timeFilter];
+  const fallbackConditions = [];
 
-  let result;
   if (excludeHash) {
-    result = await env.DB.prepare(
+    conditions.push(`sender_hash != ?`);
+    fallbackConditions.push(`sender_hash != ?`);
+  }
+  if (tagFilter) {
+    conditions.push(`tag = '${tagFilter}'`);
+    fallbackConditions.push(`tag = '${tagFilter}'`);
+  }
+
+  const whereClause = conditions.join(' AND ');
+  const fallbackWhere = fallbackConditions.length > 0 ? fallbackConditions.join(' AND ') : '1=1';
+
+  let results;
+  if (excludeHash) {
+    results = await env.DB.prepare(
       `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
        FROM embers
-       WHERE sender_hash != ? AND ${timeFilter}
+       WHERE ${whereClause}
        ORDER BY RANDOM()
-       LIMIT 1`
-    ).bind(excludeHash).first();
+       LIMIT ?`
+    ).bind(excludeHash, count).all();
 
-    // Fallback to any ember if campfire is quiet
-    if (!result) {
-      result = await env.DB.prepare(
+    // Fallback to any matching ember if campfire is quiet
+    if (!results.results?.length) {
+      results = await env.DB.prepare(
         `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
          FROM embers
-         WHERE sender_hash != ?
+         WHERE ${fallbackWhere}
          ORDER BY RANDOM()
-         LIMIT 1`
-      ).bind(excludeHash).first();
+         LIMIT ?`
+      ).bind(excludeHash, count).all();
     }
   } else {
-    result = await env.DB.prepare(
+    results = await env.DB.prepare(
       `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
        FROM embers
-       WHERE ${timeFilter}
+       WHERE ${whereClause}
        ORDER BY RANDOM()
-       LIMIT 1`
-    ).first();
+       LIMIT ?`
+    ).bind(count).all();
 
-    // Fallback to any ember if campfire is quiet
-    if (!result) {
-      result = await env.DB.prepare(
+    // Fallback to any matching ember if campfire is quiet
+    if (!results.results?.length) {
+      results = await env.DB.prepare(
         `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
          FROM embers
+         ${tagFilter ? `WHERE tag = '${tagFilter}'` : ''}
          ORDER BY RANDOM()
-         LIMIT 1`
-      ).first();
+         LIMIT ?`
+      ).bind(count).all();
     }
   }
 
-  if (!result) {
-    return corsResponse({
-      ok: true,
-      ember: null,
-      message: 'The campfire is quiet right now. Toss an ember to get things started.'
-    });
+  const embers = (results.results || []).map(e => ({
+    id: e.id,
+    message: e.message,
+    tag: e.tag,
+    username: e.username,
+    avatar_url: `https://api.dicebear.com/9.x/micah/svg?seed=${e.avatar_seed}`,
+    location: e.location_label,
+    stokes: e.stokes,
+    created_at: e.created_at,
+  }));
+
+  // Return single ember for count=1 (backwards compatible), array for count>1
+  if (count === 1) {
+    const ember = embers[0] || null;
+    if (!ember) {
+      return corsResponse({
+        ok: true,
+        ember: null,
+        message: tagFilter
+          ? `No embers with tag #${tagFilter} right now. Try another tag or toss one!`
+          : 'The campfire is quiet right now. Toss an ember to get things started.'
+      });
+    }
+    return corsResponse({ ok: true, ember });
   }
 
+  // Multiple embers requested
   return corsResponse({
     ok: true,
-    ember: {
-      id: result.id,
-      message: result.message,
-      tag: result.tag,
-      username: result.username,
-      avatar_url: `https://api.dicebear.com/9.x/micah/svg?seed=${result.avatar_seed}`,
-      location: result.location_label,
-      stokes: result.stokes,
-      created_at: result.created_at,
-    }
+    embers,
+    count: embers.length,
+    message: embers.length === 0
+      ? (tagFilter ? `No embers with tag #${tagFilter} right now.` : 'The campfire is quiet.')
+      : null
   });
 }
 

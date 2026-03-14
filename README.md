@@ -111,6 +111,48 @@ emocean/
 
 ---
 
+## Scheduled Ember Delivery
+
+Set up automatic ember catches using Hermes cron. First, ensure the gateway is running:
+
+```bash
+hermes gateway install
+```
+
+### Example: Morning Warmth
+
+Tell Hermes in natural language:
+
+```
+Every morning at 9am, catch 3 embers from Emocean using /emocean catch --count 3.
+Display each one with a warm greeting. Deliver to telegram.
+```
+
+### Example: Late Night Companion
+
+```
+Every night at 11pm, catch 2 embers tagged 'late-night' using
+/emocean catch --tag late-night --count 2. Show them with an
+encouraging note. Deliver to discord.
+```
+
+### Example: Coding Break Reminder
+
+```
+Every 4 hours during weekdays (9am-9pm), catch 1 ember from Emocean
+and show it as a gentle reminder that other devs are out there.
+```
+
+### Using CLI
+
+```bash
+/cron add "0 9 * * *" "Use /emocean catch --count 3. Display each ember with username and location."
+```
+
+> **Note**: Cron jobs run in fresh sessions. Include all context in the prompt.
+
+---
+
 ## Hackathon
 
 Built for the [Nous Research Hermes Agent Hackathon](https://x.com/NousResearch) (March 2026).

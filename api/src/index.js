@@ -405,6 +405,9 @@ async function handleStats(env) {
   const stokes = await env.DB.prepare(
     `SELECT COALESCE(SUM(stokes), 0) as total_stokes FROM embers`
   ).first();
+  const devs = await env.DB.prepare(
+    `SELECT COUNT(DISTINCT sender_hash) as unique_devs FROM embers`
+  ).first();
 
   return corsResponse({
     ok: true,
@@ -412,6 +415,7 @@ async function handleStats(env) {
       total_embers: total?.total || 0,
       embers_today: today?.today || 0,
       total_stokes: stokes?.total_stokes || 0,
+      unique_devs: devs?.unique_devs || 0,
     }
   });
 }

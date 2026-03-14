@@ -59,12 +59,12 @@ import Layout from '@/layouts/Layout.astro'
   <!-- Toss Form -->
   <section class="relative z-10 py-24 px-6" id="toss">
     <div class="max-w-xl mx-auto">
+      <h2 class="font-display text-[clamp(28px,5vw,40px)] font-bold mb-3 text-center">Toss an Ember</h2>
+      <p class="text-sm text-text-muted mb-8 text-center">Write something real. It'll glow for someone who needs it.</p>
+
       <div class="relative bg-bg-surface/70 border border-white/5 rounded-2xl p-10 backdrop-blur-xl">
         <!-- Top glow line -->
         <div class="absolute -top-px left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-ember-glow to-transparent"></div>
-
-        <h2 class="font-display text-2xl font-bold mb-2">Toss an Ember</h2>
-        <p class="text-sm text-text-muted mb-7">Write something real. It'll glow for someone who needs it.</p>
 
         <form id="toss-form" class="space-y-5">
           <div class="relative">
@@ -101,6 +101,28 @@ import Layout from '@/layouts/Layout.astro'
     </div>
   </section>
 
+  <!-- Stats -->
+  <section class="relative z-10 py-12 bg-ember/[0.03] border-y border-white/5" id="stats">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+      <div class="text-center">
+        <span id="stat-devs" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
+        <span class="text-sm text-text-muted">devs around the fire</span>
+      </div>
+      <div class="hidden md:block w-px h-10 bg-white/10"></div>
+      <div class="block md:hidden w-10 h-px bg-white/10"></div>
+      <div class="text-center">
+        <span id="stat-embers" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
+        <span class="text-sm text-text-muted">embers tossed</span>
+      </div>
+      <div class="hidden md:block w-px h-10 bg-white/10"></div>
+      <div class="block md:hidden w-10 h-px bg-white/10"></div>
+      <div class="text-center">
+        <span id="stat-stokes" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
+        <span class="text-sm text-text-muted">stokes given</span>
+      </div>
+    </div>
+  </section>
+
   <!-- How It Works -->
   <section class="relative z-10 py-20 px-6" id="how">
     <div class="max-w-5xl mx-auto">
@@ -125,21 +147,6 @@ import Layout from '@/layouts/Layout.astro'
     </div>
   </section>
 
-  <!-- Stats -->
-  <section class="relative z-10 py-12 bg-ember/[0.03] border-y border-white/5" id="stats">
-    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-      <div class="text-center">
-        <span id="stat-embers" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
-        <span class="text-sm text-text-muted">embers tossed</span>
-      </div>
-      <div class="hidden md:block w-px h-10 bg-white/10"></div>
-      <div class="block md:hidden w-10 h-px bg-white/10"></div>
-      <div class="text-center">
-        <span id="stat-stokes" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
-        <span class="text-sm text-text-muted">stokes given</span>
-      </div>
-    </div>
-  </section>
 </Layout>
 
 <style>
@@ -184,7 +191,7 @@ import Layout from '@/layouts/Layout.astro'
 </style>
 
 <script>
-  const API_URL = 'https://emocean-api.raghu-0x.workers.dev';
+  const API_URL = 'https://emocean-api.pilan.workers.dev';
   const SENDER_ID = localStorage.getItem('emocean_sender_id') || (() => {
     const id = 'web_' + crypto.randomUUID();
     localStorage.setItem('emocean_sender_id', id);
@@ -261,6 +268,22 @@ import Layout from '@/layouts/Layout.astro'
         form.classList.add('hidden');
         success?.classList.remove('hidden');
 
+        // Add new ember to pool so it appears in rotation
+        if (result.ok && result.ember) {
+          const newEmber = {
+            id: result.ember.id,
+            username: result.ember.username,
+            avatar_url: result.ember.avatar_url,
+            message: message,
+            tag: selectedTag,
+            stokes: 0,
+            location: result.ember.location,
+            location_label: result.ember.location
+          };
+          emberPool.unshift(newEmber);
+          availablePool.unshift(newEmber);
+        }
+
         setTimeout(() => {
           form.classList.remove('hidden');
           success?.classList.add('hidden');
@@ -285,15 +308,16 @@ import Layout from '@/layouts/Layout.astro'
 
   // Stats animation
   async function initStats() {
-    let stats = { total_embers: 12847, total_stokes: 48562 };
+    let stats = { total_embers: 0, total_stokes: 0, unique_devs: 0 };
     try {
       const res = await fetch(`${API_URL}/stats`);
       const data = await res.json();
       if (data.ok) stats = data.stats;
     } catch {}
 
-    animateNumber('stat-embers', stats.total_embers);
-    animateNumber('stat-stokes', stats.total_stokes);
+    animateNumber('stat-devs', stats.unique_devs || 0);
+    animateNumber('stat-embers', stats.total_embers || 0);
+    animateNumber('stat-stokes', stats.total_stokes || 0);
   }
 
   function animateNumber(id: string, target: number) {
@@ -370,7 +394,7 @@ import Layout from '@/layouts/Layout.astro'
         </header>
         <p class="ember-message">${ember.message}</p>
         <footer>
-          <span class="ember-location">${ember.location_label}</span>
+          <span class="ember-location">${ember.location || ember.location_label}</span>
           <button class="stoke-btn" data-id="${ember.id}">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
@@ -386,14 +410,27 @@ import Layout from '@/layouts/Layout.astro'
   // Attach stoke button listener to a card
   function attachStokeListener(card: Element) {
     const btn = card.querySelector('.stoke-btn');
-    btn?.addEventListener('click', () => {
-      btn.classList.toggle('active');
+    btn?.addEventListener('click', async () => {
+      if (btn.classList.contains('active')) return; // Already stoked
+
+      const emberId = card.getAttribute('data-ember-id');
+      if (!emberId) return;
+
+      btn.classList.add('active');
       const countEl = btn.querySelector('span');
       if (countEl) {
         const current = parseInt(countEl.textContent || '0');
-        const isStoked = btn.classList.contains('active');
-        countEl.textContent = String(isStoked ? current + 1 : current - 1);
+        countEl.textContent = String(current + 1);
       }
+
+      // Call API to persist stoke
+      try {
+        await fetch(`${API_URL}/stoke`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ember_id: emberId })
+        });
+      } catch {}
     });
   }
 
@@ -488,7 +525,7 @@ import Layout from '@/layouts/Layout.astro'
   async function initCampfire() {
     // Try to fetch from API, fallback to mock data
     try {
-      const res = await fetch(`${API_URL}/catch?count=24`);
+      const res = await fetch(`${API_URL}/campfire?count=24`);
       const data = await res.json();
       if (data.ok && data.embers?.length > 0) {
         // Use API data as the pool

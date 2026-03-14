@@ -5,4 +5,4 @@ compatibility_date = "2026-03-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "emocean-db"
-database_id = "placeholder-replace-after-creation"
+database_id = "6727c215-2fa8-42dc-9967-427f9a8fb262"

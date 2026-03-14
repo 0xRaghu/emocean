@@ -1,0 +1,119 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const {
+  title = 'Emocean — Warmth in the Age of AI Coding',
+  description = 'Anonymous micro-messages from developers, glowing in the campfire. No accounts. No profiles. No likes. Just warmth.'
+} = Astro.props
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Changa+One&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Ocean + Campfire Background -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <!-- Ocean gradient -->
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 50%), radial-gradient(ellipse 60% 40% at 50% 80%, rgba(255, 140, 66, 0.03) 0%, transparent 40%), linear-gradient(180deg, #0a0e14 0%, #0d1420 50%, #0a1018 100%);"></div>
+
+    <!-- Stars -->
+    <div id="stars" class="absolute inset-0"></div>
+
+    <!-- Floating embers -->
+    <div id="embers-float" class="absolute inset-0"></div>
+
+    <!-- Ocean waves -->
+    <div class="absolute bottom-0 left-0 right-0 h-24">
+      <svg class="absolute bottom-0 left-0 w-[200%] h-full opacity-60" style="animation: wave-drift 14s ease-in-out infinite alternate;" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,60 L1440,120 L0,120 Z" fill="rgba(13, 20, 32, 0.8)" />
+      </svg>
+      <svg class="absolute bottom-0 left-0 w-[200%] h-full opacity-40" style="animation: wave-drift 18s ease-in-out infinite alternate-reverse;" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,80 C240,20 480,100 720,60 C960,20 1200,100 1440,80 L1440,120 L0,120 Z" fill="rgba(13, 20, 32, 0.8)" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 py-4 bg-bg-deep/90 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-text hover:text-ember transition-colors">
+        <span class="text-xl">🔥</span>
+        <span class="font-display text-lg font-semibold tracking-tight">emocean</span>
+      </a>
+      <nav class="hidden md:flex gap-8">
+        <a href="#campfire" class="font-display text-sm text-text-muted hover:text-ember tracking-wide">Campfire</a>
+        <a href="#toss" class="font-display text-sm text-text-muted hover:text-ember tracking-wide">Toss</a>
+        <a href="#how" class="font-display text-sm text-text-muted hover:text-ember tracking-wide">How It Works</a>
+      </nav>
+    </div>
+  </header>
+
+  <slot />
+
+  <!-- Footer -->
+  <footer class="relative z-10 py-12 text-center">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col items-center gap-3">
+      <p class="font-display text-sm text-text-dim">Built for the Nous Research Hermes Agent Hackathon 2026</p>
+      <div class="flex items-center gap-3 text-sm">
+        <a href="https://github.com/0xRaghu/emocean" target="_blank" rel="noopener" class="text-text-muted hover:text-ember">GitHub</a>
+        <span class="text-text-dim">·</span>
+        <a href="https://x.com/pilan_ai" target="_blank" rel="noopener" class="text-text-muted hover:text-ember">@pilan_ai</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Create stars
+    const starsContainer = document.getElementById('stars');
+    if (starsContainer) {
+      const count = window.innerWidth < 640 ? 30 : 60;
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'absolute w-0.5 h-0.5 bg-white rounded-full opacity-40';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 60}%`;
+        star.style.animation = `twinkle 3s ease-in-out infinite ${Math.random() * 3}s`;
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // Create ember particles
+    const embersContainer = document.getElementById('embers-float');
+    if (embersContainer) {
+      const count = window.innerWidth < 640 ? 10 : 20;
+      for (let i = 0; i < count; i++) {
+        const ember = document.createElement('div');
+        ember.className = 'absolute w-1 h-1 bg-ember rounded-full opacity-0 blur-[1px]';
+        ember.style.left = `${30 + Math.random() * 40}%`;
+        ember.style.bottom = `${Math.random() * 30}%`;
+        ember.style.animation = `ember-rise ${4 + Math.random() * 4}s ease-out infinite ${Math.random() * 6}s`;
+        embersContainer.appendChild(ember);
+      }
+    }
+  </script>
+</body>
+</html>
+
+<style>
+  .font-display {
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>

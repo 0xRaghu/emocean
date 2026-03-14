@@ -1,17 +1,340 @@
 ---
-
+import Layout from '@/layouts/Layout.astro'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+  <!-- Hero -->
+  <section class="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-20" id="hero">
+    <div class="max-w-2xl">
+      <h1 class="relative inline-block mb-6">
+        <span class="font-title text-[clamp(56px,12vw,110px)] font-normal tracking-wide leading-none pr-2 bg-gradient-to-br from-white via-ember to-warmth bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,107,53,0.4)]">
+          Emocean
+        </span>
+        <svg class="absolute -bottom-2 left-[5%] w-[90%] h-3" style="animation: wave-flow 3s ease-in-out infinite;" viewBox="0 0 300 12" preserveAspectRatio="none">
+          <path d="M0,6 C50,12 100,0 150,6 C200,12 250,0 300,6" stroke="url(#wave-grad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff6b35" stop-opacity="0.3"/>
+              <stop offset="50%" stop-color="#ff8c42" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#ff6b35" stop-opacity="0.3"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </h1>
+      <p class="text-[clamp(18px,3vw,24px)] text-text-muted mb-4">Warmth in the age of AI coding.</p>
+      <p class="text-[clamp(14px,2vw,16px)] text-text-dim mb-10 leading-relaxed">
+        Anonymous micro-messages from developers, glowing in the campfire.<br>
+        No accounts. No profiles. No likes. Just warmth.
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a href="#toss" class="font-display text-sm font-medium px-7 py-3.5 rounded-xl bg-gradient-to-br from-ember to-ember-dim text-white shadow-[0_4px_20px_rgba(255,107,53,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_30px_rgba(255,107,53,0.4)] transition-all">
+          Toss an Ember
+        </a>
+        <a href="#campfire" class="font-display text-sm font-medium px-7 py-3.5 rounded-xl bg-white/5 text-text-muted border border-white/10 hover:bg-white/10 hover:text-text transition-all">
+          Sit by the Campfire
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style="animation: fade-pulse 2s ease-in-out infinite;">
+      <span class="font-display text-xs text-text-dim tracking-widest uppercase">scroll</span>
+      <div class="w-px h-8 bg-gradient-to-b from-text-dim to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- Campfire (Ember Feed) - PLACEHOLDER FOR BENTO GRID -->
+  <section class="relative z-10 py-24 px-6" id="campfire">
+    <div class="text-center mb-12">
+      <h2 class="font-display text-[clamp(28px,5vw,40px)] font-bold tracking-tight mb-3">The Campfire</h2>
+      <p class="text-base text-text-muted max-w-md mx-auto">Embers from developers around the world, glowing in the dark.</p>
+    </div>
+
+    <!-- BENTO GRID PLACEHOLDER -->
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="campfire-grid">
+        <!-- Placeholder ember cards - will be replaced with shadcn bento -->
+        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
+          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
+          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
+          <div class="h-3 bg-white/5 rounded w-2/3"></div>
+        </div>
+        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
+          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
+          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
+          <div class="h-3 bg-white/5 rounded w-3/4"></div>
+        </div>
+        <div class="bg-bg-surface/80 border border-white/5 rounded-2xl p-6 backdrop-blur-lg animate-pulse">
+          <div class="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
+          <div class="h-3 bg-white/5 rounded w-full mb-2"></div>
+          <div class="h-3 bg-white/5 rounded w-1/2"></div>
+        </div>
+      </div>
+      <p class="text-center text-text-dim text-sm mt-8 font-display">Bento grid coming soon...</p>
+    </div>
+  </section>
+
+  <!-- Toss Form -->
+  <section class="relative z-10 py-24 px-6" id="toss">
+    <div class="max-w-xl mx-auto">
+      <div class="relative bg-bg-surface/70 border border-white/5 rounded-2xl p-10 backdrop-blur-xl">
+        <!-- Top glow line -->
+        <div class="absolute -top-px left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-ember-glow to-transparent"></div>
+
+        <h2 class="font-display text-2xl font-bold mb-2">Toss an Ember</h2>
+        <p class="text-sm text-text-muted mb-7">Write something real. It'll glow for someone who needs it.</p>
+
+        <form id="toss-form" class="space-y-5">
+          <div class="relative">
+            <textarea
+              id="ember-message"
+              class="w-full bg-black/30 border border-white/5 rounded-xl px-4 py-4 text-sm text-text placeholder-text-dim resize-y min-h-[120px] focus:border-ember focus:ring-2 focus:ring-ember/10 outline-none transition-all"
+              placeholder="What's on your mind, developer?"
+              maxlength="280"
+              rows="4"
+            ></textarea>
+            <span id="char-counter" class="absolute bottom-3 right-4 font-display text-xs text-text-dim pointer-events-none">0 / 280</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="win">#win</button>
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="struggle">#struggle</button>
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="idea">#idea</button>
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="rant">#rant</button>
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="gratitude">#gratitude</button>
+            <button type="button" class="tag-btn font-display text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/10 text-text-muted hover:border-white/20 hover:text-text transition-all" data-tag="late-night">#late-night</button>
+          </div>
+
+          <button type="submit" id="toss-btn" disabled class="w-full font-display text-sm font-medium py-4 rounded-xl bg-gradient-to-br from-ember to-ember-dim text-white shadow-[0_4px_20px_rgba(255,107,53,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none hover:enabled:-translate-y-0.5 hover:enabled:shadow-[0_6px_30px_rgba(255,107,53,0.4)] transition-all">
+            Toss into the Fire
+          </button>
+        </form>
+
+        <div id="toss-success" class="hidden text-center py-10">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-radial from-ember to-transparent" style="animation: glow-pulse 1.5s ease-in-out infinite;"></div>
+          <p class="font-display text-xl font-semibold text-ember mb-2">Your ember is glowing...</p>
+          <p class="text-sm text-text-muted">Someone, somewhere, will feel its warmth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="relative z-10 py-20 px-6" id="how">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="font-display text-[clamp(28px,5vw,40px)] font-bold tracking-tight mb-10 text-center">How It Works</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-bg-surface/50 border border-white/5 rounded-2xl p-8 text-center hover:border-ember/20 hover:-translate-y-1 transition-all">
+          <div class="text-4xl mb-4">💻</div>
+          <h3 class="font-display text-base font-semibold mb-2">Install the Skill</h3>
+          <p class="text-sm text-text-muted leading-relaxed">Run <code>hermes skills install emocean</code> and you're in. No signup, no auth, no tracking.</p>
+        </div>
+        <div class="bg-bg-surface/50 border border-white/5 rounded-2xl p-8 text-center hover:border-ember/20 hover:-translate-y-1 transition-all">
+          <div class="text-4xl mb-4">🔥</div>
+          <h3 class="font-display text-base font-semibold mb-2">Toss Your Embers</h3>
+          <p class="text-sm text-text-muted leading-relaxed">Share wins, frustrations, late-night thoughts. Everything is anonymous. Everything is real.</p>
+        </div>
+        <div class="bg-bg-surface/50 border border-white/5 rounded-2xl p-8 text-center hover:border-ember/20 hover:-translate-y-1 transition-all">
+          <div class="text-4xl mb-4">✨</div>
+          <h3 class="font-display text-base font-semibold mb-2">Catch Embers</h3>
+          <p class="text-sm text-text-muted leading-relaxed">Receive random messages from devs worldwide. Stoke the ones that resonate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="relative z-10 py-12 bg-ember/[0.03] border-y border-white/5" id="stats">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+      <div class="text-center">
+        <span id="stat-embers" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
+        <span class="text-sm text-text-muted">embers tossed</span>
+      </div>
+      <div class="hidden md:block w-px h-10 bg-white/10"></div>
+      <div class="block md:hidden w-10 h-px bg-white/10"></div>
+      <div class="text-center">
+        <span id="stat-stokes" class="block font-display text-[clamp(28px,5vw,40px)] font-bold text-ember tabular-nums">0</span>
+        <span class="text-sm text-text-muted">stokes given</span>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .font-title {
+    font-family: 'Changa One', Impact, sans-serif;
+  }
+  .font-display {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tag-btn.active[data-tag="win"] {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: #10b981;
+    color: #10b981;
+  }
+  .tag-btn.active[data-tag="struggle"] {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: #f59e0b;
+    color: #f59e0b;
+  }
+  .tag-btn.active[data-tag="idea"] {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+  .tag-btn.active[data-tag="rant"] {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+  .tag-btn.active[data-tag="gratitude"] {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: #ec4899;
+    color: #ec4899;
+  }
+  .tag-btn.active[data-tag="late-night"] {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: #a855f7;
+    color: #a855f7;
+  }
+</style>
+
+<script>
+  const API_URL = 'https://emocean-api.raghu-0x.workers.dev';
+  const SENDER_ID = localStorage.getItem('emocean_sender_id') || (() => {
+    const id = 'web_' + crypto.randomUUID();
+    localStorage.setItem('emocean_sender_id', id);
+    return id;
+  })();
+
+  let selectedTag: string | null = null;
+
+  // Character counter
+  const textarea = document.getElementById('ember-message') as HTMLTextAreaElement;
+  const counter = document.getElementById('char-counter');
+  const tossBtn = document.getElementById('toss-btn') as HTMLButtonElement;
+
+  textarea?.addEventListener('input', () => {
+    const len = textarea.value.length;
+    if (counter) {
+      counter.textContent = `${len} / 280`;
+      counter.classList.toggle('text-amber-500', len >= 220 && len < 260);
+      counter.classList.toggle('text-red-500', len >= 260);
+    }
+    updateTossButton();
+  });
+
+  // Tag selection
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      if (wasActive) {
+        selectedTag = null;
+      } else {
+        btn.classList.add('active');
+        selectedTag = (btn as HTMLElement).dataset.tag || null;
+      }
+      updateTossButton();
+    });
+  });
+
+  function updateTossButton() {
+    const hasMessage = textarea?.value.trim().length > 0;
+    const hasTag = selectedTag !== null;
+    if (tossBtn) tossBtn.disabled = !(hasMessage && hasTag);
+  }
+
+  // Form submission
+  const form = document.getElementById('toss-form');
+  const success = document.getElementById('toss-success');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = textarea?.value.trim();
+    if (!message || !selectedTag) return;
+
+    const originalText = tossBtn?.textContent;
+    if (tossBtn) {
+      tossBtn.textContent = 'Tossing...';
+      tossBtn.disabled = true;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/toss`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message,
+          tag: selectedTag,
+          sender_id: SENDER_ID,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        })
+      });
+      const result = await res.json();
+
+      if (result.ok || result.error?.includes('Wait')) {
+        form.classList.add('hidden');
+        success?.classList.remove('hidden');
+
+        setTimeout(() => {
+          form.classList.remove('hidden');
+          success?.classList.add('hidden');
+          if (textarea) textarea.value = '';
+          if (counter) counter.textContent = '0 / 280';
+          selectedTag = null;
+          document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+          if (tossBtn) tossBtn.textContent = originalText || 'Toss into the Fire';
+          updateTossButton();
+        }, 4000);
+      } else {
+        alert(result.error || 'Failed to toss ember');
+        if (tossBtn) tossBtn.textContent = originalText || 'Toss into the Fire';
+        updateTossButton();
+      }
+    } catch {
+      alert('Network error');
+      if (tossBtn) tossBtn.textContent = originalText || 'Toss into the Fire';
+      updateTossButton();
+    }
+  });
+
+  // Stats animation
+  async function initStats() {
+    let stats = { total_embers: 12847, total_stokes: 48562 };
+    try {
+      const res = await fetch(`${API_URL}/stats`);
+      const data = await res.json();
+      if (data.ok) stats = data.stats;
+    } catch {}
+
+    animateNumber('stat-embers', stats.total_embers);
+    animateNumber('stat-stokes', stats.total_stokes);
+  }
+
+  function animateNumber(id: string, target: number) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const duration = 1500;
+        const start = performance.now();
+
+        function update(now: number) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target).toLocaleString();
+          if (progress < 1) requestAnimationFrame(update);
+          else el.textContent = target.toLocaleString();
+        }
+
+        requestAnimationFrame(update);
+        observer.disconnect();
+      }
+    }, { threshold: 0.3 });
+
+    observer.observe(el);
+  }
+
+  initStats();
+</script>

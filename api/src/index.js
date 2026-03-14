@@ -253,6 +253,20 @@ async function handleToss(request, env) {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(id, message.trim(), cleanTag || null, senderHash, username, avatarSeed, timezone || 'UTC', locationLabel).run();
 
+  // Update persistent metrics
+  await env.DB.prepare(`UPDATE metrics SET value = value + 1 WHERE key = 'total_embers'`).run();
+
+  // Track tag metrics
+  const tagKey = cleanTag ? `tag_${cleanTag}` : 'tag_none';
+  await env.DB.prepare(`UPDATE metrics SET value = value + 1 WHERE key = ?`).bind(tagKey).run();
+
+  // Check if new dev (first ember from this sender)
+  const existingDev = await env.DB.prepare(`SELECT 1 FROM known_devs WHERE sender_hash = ?`).bind(senderHash).first();
+  if (!existingDev) {
+    await env.DB.prepare(`INSERT INTO known_devs (sender_hash) VALUES (?)`).bind(senderHash).run();
+    await env.DB.prepare(`UPDATE metrics SET value = value + 1 WHERE key = 'total_devs'`).run();
+  }
+
   return corsResponse({
     ok: true,
     ember: {
@@ -266,23 +280,27 @@ async function handleToss(request, env) {
 
 /**
  * GET /catch — Catch a random ember from the campfire
+ * Prioritizes fresh embers (24h) and hot embers (48h with 5+ stokes)
  */
 async function handleCatch(request, env) {
   const url = new URL(request.url);
   const excludeSender = url.searchParams.get('exclude');
   const excludeHash = excludeSender ? await sha256(excludeSender) : null;
 
+  // Time filter: 24h fresh + 48h hot (5+ stokes)
+  const timeFilter = `(created_at > datetime('now', '-24 hours') OR (stokes >= 5 AND created_at > datetime('now', '-48 hours')))`;
+
   let result;
   if (excludeHash) {
     result = await env.DB.prepare(
       `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
        FROM embers
-       WHERE sender_hash != ?
-       AND created_at > datetime('now', '-7 days')
+       WHERE sender_hash != ? AND ${timeFilter}
        ORDER BY RANDOM()
        LIMIT 1`
     ).bind(excludeHash).first();
 
+    // Fallback to any ember if campfire is quiet
     if (!result) {
       result = await env.DB.prepare(
         `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
@@ -296,11 +314,12 @@ async function handleCatch(request, env) {
     result = await env.DB.prepare(
       `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
        FROM embers
-       WHERE created_at > datetime('now', '-7 days')
+       WHERE ${timeFilter}
        ORDER BY RANDOM()
        LIMIT 1`
     ).first();
 
+    // Fallback to any ember if campfire is quiet
     if (!result) {
       result = await env.DB.prepare(
         `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
@@ -358,25 +377,36 @@ async function handleStoke(request, env) {
     return corsResponse({ error: 'Ember not found' }, 404);
   }
 
+  // Update persistent stoke count
+  await env.DB.prepare(`UPDATE metrics SET value = value + 1 WHERE key = 'total_stokes'`).run();
+
   return corsResponse({ ok: true });
 }
 
 /**
  * GET /campfire — Get recent embers (for landing page)
+ * Only shows embers from the last 24 hours, with hot embers (5+ stokes) getting 48h visibility
  */
 async function handleCampfire(request, env) {
   const url = new URL(request.url);
   const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 50);
   const offset = parseInt(url.searchParams.get('offset') || '0');
 
+  // Fresh embers (24h) + hot embers (48h with 5+ stokes)
   const results = await env.DB.prepare(
     `SELECT id, message, tag, username, avatar_seed, location_label, stokes, created_at
      FROM embers
+     WHERE created_at > datetime('now', '-24 hours')
+        OR (stokes >= 5 AND created_at > datetime('now', '-48 hours'))
      ORDER BY created_at DESC
      LIMIT ? OFFSET ?`
   ).bind(limit, offset).all();
 
-  const count = await env.DB.prepare(`SELECT COUNT(*) as total FROM embers`).first();
+  const count = await env.DB.prepare(
+    `SELECT COUNT(*) as total FROM embers
+     WHERE created_at > datetime('now', '-24 hours')
+        OR (stokes >= 5 AND created_at > datetime('now', '-48 hours'))`
+  ).first();
 
   return corsResponse({
     ok: true,
@@ -395,27 +425,62 @@ async function handleCampfire(request, env) {
 }
 
 /**
- * GET /stats — Campfire statistics
+ * Cleanup — Purge embers older than 7 days (called by cron)
+ */
+async function handleCleanup(env) {
+  const result = await env.DB.prepare(
+    `DELETE FROM embers WHERE created_at < datetime('now', '-7 days')`
+  ).run();
+
+  return corsResponse({
+    ok: true,
+    purged: result.meta.changes || 0,
+  });
+}
+
+/**
+ * GET /stats — Campfire statistics (uses persistent metrics)
  */
 async function handleStats(env) {
-  const total = await env.DB.prepare(`SELECT COUNT(*) as total FROM embers`).first();
+  // Get all metrics in one query
+  const metricsResult = await env.DB.prepare(`SELECT key, value FROM metrics`).all();
+  const metrics = {};
+  for (const row of metricsResult.results || []) {
+    metrics[row.key] = row.value;
+  }
+
+  // Get today's activity (from live embers table)
   const today = await env.DB.prepare(
     `SELECT COUNT(*) as today FROM embers WHERE created_at > datetime('now', '-24 hours')`
   ).first();
-  const stokes = await env.DB.prepare(
-    `SELECT COALESCE(SUM(stokes), 0) as total_stokes FROM embers`
-  ).first();
-  const devs = await env.DB.prepare(
-    `SELECT COUNT(DISTINCT sender_hash) as unique_devs FROM embers`
+
+  // Get active embers count (currently visible in campfire)
+  const active = await env.DB.prepare(
+    `SELECT COUNT(*) as active FROM embers
+     WHERE created_at > datetime('now', '-24 hours')
+        OR (stokes >= 5 AND created_at > datetime('now', '-48 hours'))`
   ).first();
 
   return corsResponse({
     ok: true,
     stats: {
-      total_embers: total?.total || 0,
+      // Persistent totals (never decrease)
+      total_embers: metrics.total_embers || 0,
+      total_stokes: metrics.total_stokes || 0,
+      unique_devs: metrics.total_devs || 0,
+      // Live counts
       embers_today: today?.today || 0,
-      total_stokes: stokes?.total_stokes || 0,
-      unique_devs: devs?.unique_devs || 0,
+      active_embers: active?.active || 0,
+      // Tag breakdown
+      tags: {
+        win: metrics.tag_win || 0,
+        struggle: metrics.tag_struggle || 0,
+        idea: metrics.tag_idea || 0,
+        rant: metrics.tag_rant || 0,
+        gratitude: metrics.tag_gratitude || 0,
+        'late-night': metrics['tag_late-night'] || 0,
+        none: metrics.tag_none || 0,
+      }
     }
   });
 }
@@ -423,6 +488,11 @@ async function handleStats(env) {
 // ─── Main Handler ─────────────────────────────────────────────────────
 
 export default {
+  // Cron trigger for daily cleanup
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(handleCleanup(env));
+  },
+
   async fetch(request, env) {
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });

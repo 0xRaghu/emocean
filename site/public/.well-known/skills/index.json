@@ -4,7 +4,7 @@
       "name": "emocean",
       "description": "Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations.",
       "version": "1.0.0",
-      "author": "pilan-ai",
+      "author": "0xRaghu",
       "path": "emocean/SKILL.md",
       "tags": ["community", "social", "anonymous", "wellbeing", "developer-tools"],
       "category": "social"

@@ -61,7 +61,7 @@ metadata:
 |-------|-------|
 | **Name** | `emocean` |
 | **Version** | `1.0.0` |
-| **Author** | pilan-ai |
+| **Author** | 0xRaghu |
 | **License** | MIT |
 | **Website** | https://emocean.dev |
 | **Repository** | https://github.com/0xRaghu/emocean |
@@ -552,5 +552,5 @@ The campfire is ambient—no direct replies, no arguments, no judgment. Just war
 | **Created** | 2026-03-15 |
 | **Last Updated** | 2026-03-15 |
 | **Status** | Active |
-| **Maintainer** | pilan-ai |
+| **Maintainer** | 0xRaghu |
 | **License** | MIT |

@@ -22,7 +22,7 @@ name: emocean
 description: "Toss anonymous micro-messages into the developer campfire"
 license: MIT
 metadata:
-  author: pilan-ai
+  author: 0xRaghu
   version: "1.0.0"
   website: https://emocean.dev
 ```

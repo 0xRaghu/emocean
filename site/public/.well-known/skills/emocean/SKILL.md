@@ -2,7 +2,7 @@
 name: emocean
 description: "Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations."
 version: "1.0.0"
-author: pilan-ai
+author: 0xRaghu
 license: MIT
 metadata:
   website: https://emocean.dev

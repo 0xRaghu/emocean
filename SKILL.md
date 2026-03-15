@@ -5,7 +5,7 @@ license: MIT
 metadata:
   author: pilan-ai
   version: "1.0.0"
-  website: https://emocean.pilan.ai
+  website: https://emocean.dev
   repository: https://github.com/0xRaghu/emocean
 ---
 
@@ -141,5 +141,5 @@ Emocean exists because coding can be lonely. AI assistants are powerful, but som
 
 ---
 
-Website: https://emocean.pilan.ai
+Website: https://emocean.dev
 GitHub: https://github.com/0xRaghu/emocean

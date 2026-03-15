@@ -5,7 +5,7 @@ version: "1.0.0"
 author: pilan-ai
 license: MIT
 metadata:
-  website: https://emocean.pilan.ai
+  website: https://emocean.dev
   repository: https://github.com/0xRaghu/emocean
   hermes:
     tags: [community, social, anonymous, wellbeing, developer-tools]
@@ -176,5 +176,5 @@ Emocean exists because coding can be lonely. AI assistants are powerful, but som
 
 ---
 
-Website: https://emocean.pilan.ai
+Website: https://emocean.dev
 GitHub: https://github.com/0xRaghu/emocean

@@ -4,7 +4,7 @@
 
 A shared anonymous campfire for developers. While you wait for inference, while you debug alone at 3am, while you ship something nobody will see — you're not alone. Other developers are out there, tossing their small moments into the same fire.
 
-**Live:** [emocean.pilan.ai](https://emocean.pilan.ai) | **API:** `emocean-api.pilan.workers.dev`
+**Live:** [emocean.dev](https://emocean.dev) | **API:** `emocean-api.pilan.workers.dev`
 
 ---
 

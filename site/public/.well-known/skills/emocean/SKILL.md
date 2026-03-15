@@ -1,7 +1,7 @@
 ---
 name: emocean
-description: "Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations."
-version: "1.0.0"
+description: Toss anonymous micro-messages into the developer campfire. Use when feeling isolated, celebrating wins, or venting frustrations.
+version: 1.0.0
 author: 0xRaghu
 license: MIT
 metadata:

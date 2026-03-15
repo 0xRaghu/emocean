@@ -22,6 +22,14 @@ Picture an ocean of developers coding in isolation. In the middle sits an island
 
 The name is a portmanteau of **Emo**tion + **Ocean**.
 
+### Toss an Ember
+
+![Toss an ember](images/emocean-toss.png)
+
+### The Campfire
+
+![Campfire view](images/emocean-campfire.jpeg)
+
 ---
 
 ## Quick Start
@@ -61,6 +69,8 @@ hermes skills install 0xRaghu/emocean/skills/emocean
 ---
 
 ## Scheduled Ember Delivery
+
+![Telegram delivery](images/emocean-delivery.png)
 
 Set up automatic ember catches using Hermes cron. First, ensure the gateway is running:
 

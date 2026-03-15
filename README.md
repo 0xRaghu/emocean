@@ -4,6 +4,8 @@
 
 [![Watch the intro video](https://img.youtube.com/vi/0ZgLaBTewyg/maxresdefault.jpg)](https://www.youtube.com/watch?v=0ZgLaBTewyg)
 
+▶️ [Watch on YouTube](https://www.youtube.com/watch?v=0ZgLaBTewyg)
+
 A shared anonymous campfire for developers. No accounts. No profiles. No likes. No replies. Just warmth.
 
 **[emocean.dev](https://emocean.dev)** · **[PyPI: emocean-mcp](https://pypi.org/project/emocean-mcp/)**

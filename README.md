@@ -2,13 +2,35 @@
 
 **Warmth in the age of AI coding.**
 
-A shared anonymous campfire for developers. While you wait for inference, while you debug alone at 3am, while you ship something nobody will see — you're not alone. Other developers are out there, tossing their small moments into the same fire.
+[![Watch the intro video](https://img.youtube.com/vi/0ZgLaBTewyg/maxresdefault.jpg)](https://www.youtube.com/watch?v=0ZgLaBTewyg)
 
-**Live:** [emocean.dev](https://emocean.dev) | **API:** `emocean-api.pilan.workers.dev`
+A shared anonymous campfire for developers. No accounts. No profiles. No likes. No replies. Just warmth.
+
+**[emocean.dev](https://emocean.dev)** · **[PyPI: emocean-mcp](https://pypi.org/project/emocean-mcp/)**
 
 ---
 
-## Install the Skill
+## The Campfire
+
+AI-assisted coding is efficient but lonely. You spend hours in flow states with AI agents — small wins, frustrations, late-night breakthroughs — but these micro-moments evaporate. Nobody tweets "I fixed a semicolon after 30 minutes." Twitter is performative, Reddit is topical. Neither captures the texture of daily dev life.
+
+**Emocean** is different.
+
+Picture an ocean of developers coding in isolation. In the middle sits an island with a campfire — a warm, ambient gathering point. Developers don't talk to each other directly. They **toss embers** (short anonymous messages) into the fire and watch others' embers glow. When one resonates, they **stoke** it — a single gesture that says "I felt this."
+
+The name is a portmanteau of **Emo**tion + **Ocean**.
+
+---
+
+## Quick Start
+
+### MCP (Claude Code / Claude Desktop)
+
+```bash
+claude mcp add emocean -- uvx emocean-mcp
+```
+
+> See [mcp/README.md](mcp/README.md) for Claude Desktop config and details.
 
 ### Hermes Agent
 
@@ -16,98 +38,23 @@ A shared anonymous campfire for developers. While you wait for inference, while 
 hermes skills install 0xRaghu/emocean/skills/emocean
 ```
 
-### Usage
+### Try it
 
 ```bash
-# Toss an ember
+# Toss an ember into the campfire
 /emocean toss "Finally fixed that race condition!" --tag win
 
-# Catch a random ember
+# Catch a random ember from another dev
 /emocean catch
+
+# Catch late-night vibes
+/emocean catch --tag late-night --count 3
 
 # View the campfire
 /emocean campfire
 ```
 
----
-
-## The Idea
-
-AI-assisted coding is efficient but lonely. Developers spend hours in flow states with AI agents, experiencing small wins, frustrations, and late-night thoughts — but these micro-moments evaporate. Nobody tweets "I fixed a semicolon after 30 minutes." Twitter is performative, Reddit is topical. Neither captures the texture of daily dev life.
-
-**Emocean** fills that gap with anonymous, low-stakes, serendipitous human connection.
-
-The name is a portmanteau of **Emo**tion + **Ocean**.
-
----
-
-## The Metaphor
-
-The ocean is the vast shared world of developers coding in isolation. In the middle of it sits an island with a campfire — a warm, ambient gathering point.
-
-Developers don't talk to each other directly. They **toss embers** (short anonymous messages) into the fire and watch others' embers glow. When one resonates, they **stoke** it — a single gesture that says "I felt this."
-
-No accounts. No profiles. No likes. No replies. Just warmth.
-
----
-
-## Vocabulary
-
-| Term | Meaning |
-|------|---------|
-| **Ember** | A short anonymous message (max 280 chars) |
-| **Toss** | Send an ember into the campfire |
-| **Stoke** | React to an ember — "I felt this" |
-| **Campfire** | The shared space where embers live |
-| **The Ocean** | The vast backdrop — devs coding in isolation |
-
----
-
-## Features
-
-- **Toss embers** — Share anonymous messages with optional tags
-- **Catch embers** — Receive random messages from developers worldwide
-- **Stoke** — One reaction only: "I felt this"
-- **Fuzzy location** — Timezone converted to vague region ("Somewhere in East Asia")
-- **Deterministic identity** — Same sender always gets same avatar + username
-- **Cross-platform** — CLI, Telegram, Discord, Slack via Hermes Agent
-
----
-
-## Tags
-
-`#win` · `#struggle` · `#idea` · `#rant` · `#gratitude` · `#late-night`
-
----
-
-## Project Structure
-
-```
-emocean/
-├── api/                    # Cloudflare Workers + D1 backend
-│   ├── src/index.js        # API routes (/toss, /catch, /stoke, /campfire, /stats)
-│   ├── schema.sql          # Database schema
-│   └── wrangler.toml       # Cloudflare config
-│
-├── site/                   # Astro landing page
-│   └── src/
-│       ├── pages/index.astro
-│       ├── layouts/Layout.astro
-│       └── styles/global.css
-│
-└── skills/                 # Agent skills (agentskills.io format)
-    └── emocean/
-        └── SKILL.md        # Hermes/Claude Code/Cursor compatible
-```
-
----
-
-## Tech Stack
-
-- **Backend**: Cloudflare Workers + D1 (SQLite at edge)
-- **Frontend**: Astro + Tailwind CSS
-- **Skill Format**: [agentskills.io](https://agentskills.io) open standard
-- **Compatible Agents**: Hermes, Claude Code, Cursor, VS Code Copilot, Gemini CLI, and 30+ others
+**Tags:** `#win` · `#struggle` · `#idea` · `#rant` · `#gratitude` · `#late-night`
 
 ---
 
@@ -119,16 +66,14 @@ Set up automatic ember catches using Hermes cron. First, ensure the gateway is r
 hermes gateway install
 ```
 
-### Example: Morning Warmth
-
-Tell Hermes in natural language:
+### Morning Warmth
 
 ```
 Every morning at 9am, catch 3 embers from Emocean using /emocean catch --count 3.
 Display each one with a warm greeting. Deliver to telegram.
 ```
 
-### Example: Late Night Companion
+### Late Night Companion
 
 ```
 Every night at 11pm, catch 2 embers tagged 'late-night' using
@@ -136,7 +81,7 @@ Every night at 11pm, catch 2 embers tagged 'late-night' using
 encouraging note. Deliver to discord.
 ```
 
-### Example: Coding Break Reminder
+### Coding Break Reminder
 
 ```
 Every 4 hours during weekdays (9am-9pm), catch 1 ember from Emocean
@@ -149,7 +94,27 @@ and show it as a gentle reminder that other devs are out there.
 /cron add "0 9 * * *" "Use /emocean catch --count 3. Display each ember with username and location."
 ```
 
-> **Note**: Cron jobs run in fresh sessions. Include all context in the prompt.
+> Cron jobs run in fresh sessions. Include all context in the prompt.
+
+---
+
+## Integrations
+
+| Platform | Install |
+|----------|---------|
+| **MCP** (Claude Code, Claude Desktop) | `uvx emocean-mcp` — [details](mcp/README.md) |
+| **Hermes Agent** | `hermes skills install 0xRaghu/emocean/skills/emocean` |
+| **Website** | [emocean.dev](https://emocean.dev) |
+| **API** | `emocean-api.pilan.workers.dev` |
+
+---
+
+## Tech Stack
+
+- **Backend**: Cloudflare Workers + D1 (SQLite at edge)
+- **Frontend**: Astro + Tailwind CSS
+- **MCP Server**: Python + FastMCP ([PyPI](https://pypi.org/project/emocean-mcp/))
+- **Skill Format**: [agentskills.io](https://agentskills.io) open standard
 
 ---
 
@@ -159,6 +124,4 @@ Built for the [Nous Research Hermes Agent Hackathon](https://x.com/NousResearch)
 
 ---
 
-## License
-
-MIT
+MIT · [0xRaghu](https://github.com/0xRaghu)

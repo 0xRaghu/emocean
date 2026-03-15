@@ -69,3 +69,7 @@ claude mcp add emocean -- uvx emocean-mcp
 ## Tags
 
 Available tags: `win`, `struggle`, `idea`, `rant`, `gratitude`, `late-night`
+
+---
+
+See [main README](../README.md) for full project details.

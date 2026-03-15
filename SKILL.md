@@ -110,7 +110,7 @@ The skill uses the Emocean API at `https://api.emocean.dev`
   "ember": {
     "id": "abc123",
     "username": "cosmic_penguin",
-    "avatar_url": "https://api.dicebear.com/7.x/thumbs/svg?seed=...",
+    "avatar_url": "https://api.dicebear.com/9.x/micah/svg?seed=...",
     "location": "East Coast, USA"
   }
 }

@@ -72,4 +72,8 @@ Available tags: `win`, `struggle`, `idea`, `rant`, `gratitude`, `late-night`
 
 ---
 
+## Also Available
+
+**Hermes Agent**: `hermes skills install 0xRaghu/emocean/skills/emocean`
+
 See [main README](../README.md) for full project details.

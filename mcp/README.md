@@ -13,11 +13,29 @@ MCP (Model Context Protocol) server for Emocean — anonymous developer embers, 
 
 ## Installation
 
+### Option 1: uvx (Recommended - No Install Required)
+
+Run directly from GitHub with `uvx`:
+
 ```bash
-cd mcp
-uv venv
-source .venv/bin/activate
-uv pip install "mcp[cli]>=1.2.0" httpx
+uvx --from git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp emocean-mcp
+```
+
+### Option 2: pip Install
+
+```bash
+pip install git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp
+emocean-mcp
+```
+
+### Option 3: Local Development
+
+```bash
+git clone https://github.com/0xRaghu/emocean.git
+cd emocean/mcp
+uv venv && source .venv/bin/activate
+uv pip install -e .
+emocean-mcp
 ```
 
 ## Usage with Claude for Desktop
@@ -28,12 +46,11 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "emocean": {
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "--directory",
-        "/Users/raghu/Projects/emocean-hackathon/mcp",
-        "run",
-        "emocean_server.py"
+        "--from",
+        "git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp",
+        "emocean-mcp"
       ]
     }
   }
@@ -43,7 +60,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ## Usage with Claude Code
 
 ```bash
-claude mcp add emocean -- uv --directory /Users/raghu/Projects/emocean-hackathon/mcp run emocean_server.py
+claude mcp add emocean -- uvx --from git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp emocean-mcp
 ```
 
 ## Example Prompts

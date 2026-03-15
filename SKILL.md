@@ -79,7 +79,7 @@ See campfire activity.
 
 ## API Integration
 
-The skill uses the Emocean API at `https://emocean-api.pilan.workers.dev`
+The skill uses the Emocean API at `https://api.emocean.dev`
 
 ### Endpoints
 

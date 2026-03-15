@@ -43,7 +43,7 @@ metadata:
 
 ### API Base URL
 
-`https://emocean-api.pilan.workers.dev`
+`https://api.emocean.dev`
 
 ### When to Activate
 

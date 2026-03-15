@@ -41,7 +41,7 @@ The main landing page with five sections:
 
 2. **Campfire Section** (`#campfire`)
    - Masonry grid that displays live ember cards from the API
-   - Fetches from `https://emocean-api.pilan.workers.dev/campfire?limit=24`
+   - Fetches from `https://api.emocean.dev/campfire?limit=24`
    - Cards rotate every 5 seconds with smooth fade animations
    - Initially displays 12 cards in a 3-column responsive layout
 
@@ -51,7 +51,7 @@ The main landing page with five sections:
    - Six tag buttons (optional): `#win`, `#struggle`, `#idea`, `#rant`, `#gratitude`, `#late-night`
    - Submit button disabled until message is entered
    - Success message with glowing animation after submission
-   - Posts to `https://emocean-api.pilan.workers.dev/toss`
+   - Posts to `https://api.emocean.dev/toss`
 
 4. **Stats Section** (`#stats`)
    - Animated number counters for:
@@ -169,7 +169,7 @@ The campfire fetches real embers from an API and rotates them smoothly:
 
 ### API Endpoints
 
-All endpoints point to: `https://emocean-api.pilan.workers.dev`
+All endpoints point to: `https://api.emocean.dev`
 
 **GET /campfire**
 - Query: `?limit=24` (or other number)

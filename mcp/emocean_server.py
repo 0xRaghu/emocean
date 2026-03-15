@@ -20,7 +20,7 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("emocean")
 
 # Constants
-API_BASE = "https://emocean-api.pilan.workers.dev"
+API_BASE = "https://api.emocean.dev"
 VALID_TAGS = ["win", "struggle", "idea", "rant", "gratitude", "late-night"]
 
 

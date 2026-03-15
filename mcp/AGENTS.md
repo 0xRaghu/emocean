@@ -39,7 +39,7 @@ This is a Python MCP server directory. To work here:
    - FastMCP decorator: `@mcp.tool()` for tool definitions
    - Async/await: All tools use `async def` with httpx for API calls
    - Error handling: Explicit error messages returned as strings
-   - API base: `https://emocean-api.pilan.workers.dev`
+   - API base: `https://api.emocean.dev`
 
 4. **Testing tools locally** (requires MCP client):
    - Use Claude for Desktop with `claude_desktop_config.json`
@@ -99,7 +99,7 @@ claude mcp add emocean -- uvx emocean-mcp
 
 ### API Integration
 
-- **Base URL**: `https://emocean-api.pilan.workers.dev`
+- **Base URL**: `https://api.emocean.dev`
 - **Endpoints**: `/toss`, `/catch`, `/stoke`, `/stats` (POST/GET)
 - **Timeout**: 30 seconds per request
 - **Error handling**: Returns None on failure, callers show user-friendly error messages

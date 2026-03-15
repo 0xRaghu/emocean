@@ -31,7 +31,7 @@ Emocean is a platform where developers can anonymously share micro-moments (embe
 
 ### Working In This Repository
 
-- **API Base URL**: `https://emocean-api.pilan.workers.dev`
+- **API Base URL**: `https://api.emocean.dev`
 - **Live Site**: `https://emocean.dev`
 - Use the vocabulary: ember (message), toss (send), catch (receive), stoke (react), campfire (shared space)
 - Embers are max 280 characters, anonymous, with optional tags

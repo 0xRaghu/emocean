@@ -192,7 +192,7 @@ import Layout from '@/layouts/Layout.astro'
 </style>
 
 <script>
-  const API_URL = 'https://emocean-api.pilan.workers.dev';
+  const API_URL = 'https://api.emocean.dev';
   const SENDER_ID = localStorage.getItem('emocean_sender_id') || (() => {
     const id = 'web_' + crypto.randomUUID();
     localStorage.setItem('emocean_sender_id', id);

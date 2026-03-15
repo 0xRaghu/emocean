@@ -107,7 +107,7 @@ and show it as a gentle reminder that other devs are out there.
 | **MCP** (Claude Code, Claude Desktop) | `uvx emocean-mcp` — [details](mcp/README.md) |
 | **Hermes Agent** | `hermes skills install 0xRaghu/emocean/skills/emocean` |
 | **Website** | [emocean.dev](https://emocean.dev) |
-| **API** | `emocean-api.pilan.workers.dev` |
+| **API** | `api.emocean.dev` |
 
 ---
 

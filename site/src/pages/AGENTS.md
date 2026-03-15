@@ -29,7 +29,7 @@ The landing page has 5 main sections:
 
 ```javascript
 // Fetches embers from API
-const response = await fetch('https://emocean-api.pilan.workers.dev/campfire');
+const response = await fetch('https://api.emocean.dev/campfire');
 
 // Ember rotation every 5 seconds
 setInterval(rotateNextCard, 5000);

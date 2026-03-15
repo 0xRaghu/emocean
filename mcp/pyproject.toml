@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "emocean-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "MCP server for Emocean - anonymous developer embers, glowing in the campfire"
 readme = "README.md"
 license = "MIT"

@@ -188,6 +188,7 @@ import Layout from '@/layouts/Layout.astro'
     border-color: #a855f7;
     color: #a855f7;
   }
+
 </style>
 
 <script>
@@ -363,7 +364,6 @@ import Layout from '@/layouts/Layout.astro'
   // Currently displayed embers and available pool
   let displayedEmbers: typeof emberPool = [];
   let availablePool: typeof emberPool = [];
-  let currentRotationIndex = 0;
   let rotationInterval: number | null = null;
 
   // Create ember card element (not HTML string for better auto-animate support)
@@ -431,7 +431,7 @@ import Layout from '@/layouts/Layout.astro'
     return availablePool.splice(idx, 1)[0];
   }
 
-  // Replace one card (round-robin style)
+  // Replace a random card with smooth fade transition
   function rotateNextCard() {
     const grid = document.getElementById('campfire-grid');
     if (!grid || displayedEmbers.length === 0) return;
@@ -439,22 +439,26 @@ import Layout from '@/layouts/Layout.astro'
     const newEmber = getRandomEmber();
     if (!newEmber) return;
 
-    // Get the card to replace (round-robin)
-    const oldEmber = displayedEmbers[currentRotationIndex];
-    const oldCard = grid.querySelector(`[data-ember-id="${oldEmber.id}"]`);
+    // Pick a random card to replace
+    const indexToReplace = Math.floor(Math.random() * displayedEmbers.length);
+    const oldEmber = displayedEmbers[indexToReplace];
+    const oldCard = grid.querySelector(`[data-ember-id="${oldEmber.id}"]`) as HTMLElement;
 
     if (oldCard) {
-      // Return old ember to pool
-      availablePool.push(oldEmber);
-      displayedEmbers[currentRotationIndex] = newEmber;
+      // Fade out old card using global CSS animation
+      oldCard.classList.add('fading-out');
 
-      // Create and insert new card - auto-animate handles the transition
-      const newCard = createEmberCard(newEmber);
-      oldCard.replaceWith(newCard);
+      setTimeout(() => {
+        // Return old ember to pool
+        availablePool.push(oldEmber);
+        displayedEmbers[indexToReplace] = newEmber;
+
+        // Create new card with fade-in animation
+        const newCard = createEmberCard(newEmber);
+        newCard.classList.add('fading-in');
+        oldCard.replaceWith(newCard);
+      }, 1200); // Match CSS animation duration
     }
-
-    // Move to next card (round-robin)
-    currentRotationIndex = (currentRotationIndex + 1) % displayedEmbers.length;
   }
 
   // Start the rotation interval
@@ -483,7 +487,7 @@ import Layout from '@/layouts/Layout.astro'
       autoAnimate(grid, { duration: 400, easing: 'ease-out' });
     }
 
-    // Start rotation after initial render + small delay
+    // Start rotation after initial render
     setTimeout(startRotation, 3000);
   }
 

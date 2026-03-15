@@ -1,0 +1,13 @@
+[project]
+name = "emocean-mcp"
+version = "1.0.0"
+description = "MCP server for Emocean - anonymous developer embers"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.2.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+emocean-mcp = "emocean_server:main"

@@ -363,38 +363,43 @@ import Layout from '@/layouts/Layout.astro'
   // Currently displayed embers and available pool
   let displayedEmbers: typeof emberPool = [];
   let availablePool: typeof emberPool = [];
+  let currentRotationIndex = 0;
+  let rotationInterval: number | null = null;
 
-  // Create HTML for a single ember card
-  function createEmberHTML(ember: typeof emberPool[0]) {
-    return `
-      <article class="ember-card fading-in" data-ember-id="${ember.id}">
-        <header>
-          <div class="ember-user">
-            <img class="ember-avatar" src="${ember.avatar_url}" alt="" />
-            <span class="ember-username">${ember.username}</span>
-          </div>
-          <span class="ember-tag" data-tag="${ember.tag}">#${ember.tag}</span>
-        </header>
-        <p class="ember-message">${ember.message}</p>
-        <footer>
-          <span class="ember-location">${ember.location || ember.location_label}</span>
-          <button class="stoke-btn" data-id="${ember.id}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
-            </svg>
-            <span>${ember.stokes}</span>
-          </button>
-        </footer>
-      </article>
+  // Create ember card element (not HTML string for better auto-animate support)
+  function createEmberCard(ember: typeof emberPool[0]): HTMLElement {
+    const article = document.createElement('article');
+    article.className = 'ember-card';
+    article.dataset.emberId = ember.id;
+    article.innerHTML = `
+      <header>
+        <div class="ember-user">
+          <img class="ember-avatar" src="${ember.avatar_url}" alt="" />
+          <span class="ember-username">${ember.username}</span>
+        </div>
+        <span class="ember-tag" data-tag="${ember.tag}">#${ember.tag}</span>
+      </header>
+      <p class="ember-message">${ember.message}</p>
+      <footer>
+        <span class="ember-location">${ember.location || ember.location_label}</span>
+        <button class="stoke-btn" data-id="${ember.id}">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
+          </svg>
+          <span>${ember.stokes}</span>
+        </button>
+      </footer>
     `;
+    attachStokeListener(article);
+    return article;
   }
 
   // Attach stoke button listener to a card
   function attachStokeListener(card: Element) {
     const btn = card.querySelector('.stoke-btn');
     btn?.addEventListener('click', async () => {
-      if (btn.classList.contains('active')) return; // Already stoked
+      if (btn.classList.contains('active')) return;
 
       const emberId = card.getAttribute('data-ember-id');
       if (!emberId) return;
@@ -406,7 +411,6 @@ import Layout from '@/layouts/Layout.astro'
         countEl.textContent = String(current + 1);
       }
 
-      // Call API to persist stoke
       try {
         await fetch(`${API_URL}/stoke`, {
           method: 'POST',
@@ -420,65 +424,44 @@ import Layout from '@/layouts/Layout.astro'
   // Get a random ember from the available pool
   function getRandomEmber() {
     if (availablePool.length === 0) {
-      // Refill pool with embers not currently displayed
       availablePool = emberPool.filter(e => !displayedEmbers.find(d => d.id === e.id));
     }
+    if (availablePool.length === 0) return null;
     const idx = Math.floor(Math.random() * availablePool.length);
     return availablePool.splice(idx, 1)[0];
   }
 
-  // Replace a single card with a new ember
-  function replaceCard(emberId: string) {
+  // Replace one card (round-robin style)
+  function rotateNextCard() {
     const grid = document.getElementById('campfire-grid');
-    if (!grid) return;
+    if (!grid || displayedEmbers.length === 0) return;
 
-    const card = grid.querySelector(`[data-ember-id="${emberId}"]`) as HTMLElement;
-    if (!card) {
-      console.log('Card not found:', emberId);
-      return;
+    const newEmber = getRandomEmber();
+    if (!newEmber) return;
+
+    // Get the card to replace (round-robin)
+    const oldEmber = displayedEmbers[currentRotationIndex];
+    const oldCard = grid.querySelector(`[data-ember-id="${oldEmber.id}"]`);
+
+    if (oldCard) {
+      // Return old ember to pool
+      availablePool.push(oldEmber);
+      displayedEmbers[currentRotationIndex] = newEmber;
+
+      // Create and insert new card - auto-animate handles the transition
+      const newCard = createEmberCard(newEmber);
+      oldCard.replaceWith(newCard);
     }
 
-    // Get index in displayedEmbers
-    const cardIndex = displayedEmbers.findIndex(e => e.id === emberId);
-    if (cardIndex === -1) return;
-
-    // Fade out
-    card.classList.remove('fading-in');
-    card.classList.add('fading-out');
-
-    setTimeout(() => {
-      // Get new ember and update displayed list
-      const newEmber = getRandomEmber();
-      if (!newEmber) {
-        console.log('No new ember available');
-        return;
-      }
-
-      // Return old ember to pool
-      const oldEmber = displayedEmbers[cardIndex];
-      if (oldEmber) availablePool.push(oldEmber);
-      displayedEmbers[cardIndex] = newEmber;
-
-      // Replace HTML
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = createEmberHTML(newEmber);
-      const newCard = tempDiv.firstElementChild as HTMLElement;
-
-      card.replaceWith(newCard);
-      attachStokeListener(newCard);
-
-      // Remove fading-in class after animation
-      setTimeout(() => newCard.classList.remove('fading-in'), 1500);
-
-      // Schedule next replacement for the new ember
-      scheduleReplacement(newEmber.id);
-    }, 1200); // Wait for fade-out animation (1.2s)
+    // Move to next card (round-robin)
+    currentRotationIndex = (currentRotationIndex + 1) % displayedEmbers.length;
   }
 
-  // Schedule a card replacement with random delay
-  function scheduleReplacement(emberId: string) {
-    const delay = 30000 + Math.random() * 20000; // 30-50 seconds for organic feel
-    setTimeout(() => replaceCard(emberId), delay);
+  // Start the rotation interval
+  function startRotation() {
+    if (rotationInterval) return;
+    // Rotate one card every 5 seconds for smooth, predictable updates
+    rotationInterval = window.setInterval(rotateNextCard, 5000);
   }
 
   // Render initial embers in campfire grid
@@ -489,19 +472,19 @@ import Layout from '@/layouts/Layout.astro'
     displayedEmbers = embers.slice(0, 12);
     availablePool = emberPool.filter(e => !displayedEmbers.find(d => d.id === e.id));
 
-    grid.innerHTML = displayedEmbers.map(ember => createEmberHTML(ember)).join('');
-
-    // Remove initial fading-in class and attach listeners
-    grid.querySelectorAll('.ember-card').forEach((card, idx) => {
-      setTimeout(() => card.classList.remove('fading-in'), 100 + idx * 50);
-      attachStokeListener(card);
+    // Clear and render
+    grid.innerHTML = '';
+    displayedEmbers.forEach(ember => {
+      grid.appendChild(createEmberCard(ember));
     });
 
-    // Start staggered replacement timers (offset each card)
-    displayedEmbers.forEach((ember, idx) => {
-      const initialDelay = 8000 + idx * 2000 + Math.random() * 5000; // Stagger start: 8-15s per card
-      setTimeout(() => scheduleReplacement(ember.id), initialDelay);
-    });
+    // Initialize auto-animate on the grid
+    if (typeof autoAnimate !== 'undefined') {
+      autoAnimate(grid, { duration: 400, easing: 'ease-out' });
+    }
+
+    // Start rotation after initial render + small delay
+    setTimeout(startRotation, 3000);
   }
 
   // Show empty state when campfire has no embers

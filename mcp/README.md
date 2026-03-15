@@ -15,16 +15,16 @@ MCP (Model Context Protocol) server for Emocean — anonymous developer embers, 
 
 ### Option 1: uvx (Recommended - No Install Required)
 
-Run directly from GitHub with `uvx`:
+Run directly from PyPI with `uvx`:
 
 ```bash
-uvx --from git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp emocean-mcp
+uvx emocean-mcp
 ```
 
 ### Option 2: pip Install
 
 ```bash
-pip install git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp
+pip install emocean-mcp
 emocean-mcp
 ```
 
@@ -47,11 +47,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "emocean": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp",
-        "emocean-mcp"
-      ]
+      "args": ["emocean-mcp"]
     }
   }
 }
@@ -60,7 +56,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ## Usage with Claude Code
 
 ```bash
-claude mcp add emocean -- uvx --from git+https://github.com/0xRaghu/emocean.git#subdirectory=mcp emocean-mcp
+claude mcp add emocean -- uvx emocean-mcp
 ```
 
 ## Example Prompts
